@@ -17,9 +17,9 @@ for i in range(len(data)):
 			sections[section] +=1
 
 	numberReversed = len(Document.identifyClaims()['reversed'])
-	numberAffirmed = len(Document.identifyClaims()['reversed'])
-	if (numberAffirmed + numberReversed) != 0:
-		percentClaimsRev[i] = numberReversed / (numberAffirmed + numberReversed)
+	numberAffirmed = len(Document.identifyClaims()['affirmed'])
+	if (numberAffirmed + numberReversed != 0):
+		percentClaimsRev[i] = float(numberReversed) / float(numberAffirmed + numberReversed)
 	elif Document.affirmed == True:
 		percentClaimsRev[i] = 0
 	elif Document.reversed == True:

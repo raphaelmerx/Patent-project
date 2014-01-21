@@ -1,6 +1,7 @@
 from textblob import TextBlob
 import json
 import re
+import operator
 
 def rangeToSequence(s):
     rangeString = re.findall(r'\d+', s)
@@ -26,10 +27,13 @@ class AppealDocument:
     def __init__(self,document):
         self.applicationNumber = document['number']
         self.text = document['text']
+        # rejectedClaims are the ones rejected initially by the examiner, not the ones rejected in the end
         self.rejectedClaims = self.identifyClaims()
+        # if no claims were found
         if self.rejectedClaims == {'affirmed':set(),'reversed':set()}:
             (self.reversed,self.affirmed) = self.reversedOrAffirmed()
         self.sections = self.identifySections()
+        self.applicationNumber = self.identifyApplicationNumber()
         
             
     # look at what claim numbers appear, and at whether the E's decision is rejected or affirmed concerning those claims
@@ -73,6 +77,22 @@ class AppealDocument:
             extendedString = self.text[indexStart[j]-50:indexEnd[j]+60].lower()
             sections.add(rawString[2:])
         return sections
+
+    def identifyApplicationNumber(self):
+        text = self.text
+        indexStart = [m.start() for m in re.finditer('[aA]pplication \d+\/?\d+,?\d+', text)]
+        indexEnd = [m.end() for m in re.finditer('[aA]pplication \d+\/?\d+,?\d+', text)]
+        numbersFound = [text[indexStart[j]+12:indexEnd[j]] for j in range(len(indexStart))]
+        setNumbersFound = set(numbersFound)
+        numberOccurences = {}
+        for number in setNumbersFound:
+            numberOccurences[number] = numbersFound.count(number)
+        if numberOccurences != {}:
+            return max(numberOccurences.iteritems(), key=operator.itemgetter(1))[0]
+        else:
+            return None
+        
+
         
         
     

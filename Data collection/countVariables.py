@@ -16,6 +16,9 @@ for i in range(len(data)):
 		else:
 			sections[section] +=1
 
+	print Document.applicationNumber
+
+	'''
 	numberReversed = len(Document.identifyClaims()['reversed'])
 	numberAffirmed = len(Document.identifyClaims()['reversed'])
 	if (numberAffirmed + numberReversed) != 0:
@@ -24,3 +27,4 @@ for i in range(len(data)):
 		percentClaimsRev[i] = 0
 	elif Document.reversed == True:
 		percentClaimsRev[i] = 1
+	'''
